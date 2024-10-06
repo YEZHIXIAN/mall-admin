@@ -39,6 +39,13 @@
         header-align="center"
         align="center"
         label="品牌logo地址">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px; height: 80px"
+            :src="scope.row.logo"
+            fit="contain">
+          </el-image>
+        </template>
       </el-table-column>
       <el-table-column
         prop="descript"
@@ -53,10 +60,13 @@
         label="显示状态">
         <template slot-scope="scope">
           <el-switch
-            v-model="value"
+            v-model="scope.row.showStatus"
             active-color="#13ce66"
-            inactive-color="#ff4949">
-          </el-switch>
+            inactive-color="#ff4949"
+            :active-value="1"
+            :inactive-value="0"
+            @change="updateBrandStatus(scope.row)"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column
@@ -99,6 +109,8 @@
 
 <script>
   import AddOrUpdate from './brand-add-or-update'
+  import {isAuth} from '../../../utils'
+  import {value} from 'lodash/seq'
   export default {
     data () {
       return {
@@ -121,6 +133,8 @@
       this.getDataList()
     },
     methods: {
+      value,
+      isAuth,
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
@@ -142,6 +156,21 @@
           }
           this.dataListLoading = false
         })
+      },
+      updateBrandStatus(data) {
+        // console.log("最新信息", data);
+        let { brandId, showStatus } = data
+        //发送请求修改状态
+        this.$http({
+          url: this.$http.adornUrl("/product/brand/update/status"),
+          method: "post",
+          data: this.$http.adornData({ brandId, showStatus }, false)
+        }).then(({ data }) => {
+          this.$message({
+            type: "success",
+            message: "状态更新成功"
+          });
+        }).catch(() => {})
       },
       // 每页数
       sizeChangeHandle (val) {
@@ -167,7 +196,7 @@
       },
       // 删除
       deleteHandle (id) {
-        var ids = id ? [id] : this.dataListSelections.map(item => {
+        let ids = id ? [id] : this.dataListSelections.map(item => {
           return item.brandId
         })
         this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {

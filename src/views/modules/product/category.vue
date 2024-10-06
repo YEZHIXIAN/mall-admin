@@ -136,7 +136,7 @@ export default {
         url: this.$http.adornUrl(`/product/category/update/sort`),
         method: 'post',
         data: this.updateNodes
-      }).then(({data}) => {
+      }).then(() => {
         this.$message({
           message: 'successfully edited data',
           type: 'success'
@@ -234,13 +234,13 @@ export default {
       })
     },
     editCategory() {
-      var {catId, name, icon, productUnit} = this.category
+      let {catId, name, icon, productUnit} = this.category
       console.log('edited data to be uploaded', {catId, name, icon, productUnit})
       this.$http({
         url: this.$http.adornUrl(`/product/category/update`),
         method: 'post',
         data: this.$http.adornData({catId, name, icon, productUnit}, false)
-      }).then(({data}) => {
+      }).then(() => {
         this.$message({
           message: 'successfully edited data',
           type: 'success'
@@ -270,7 +270,7 @@ export default {
         url: this.$http.adornUrl(`/product/category/save`),
         method: 'post',
         data: this.$http.adornData(this.category, false)
-      }).then(({data}) => {
+      }).then(() => {
         this.$message({
           message: 'successfully save',
           type: 'success'
@@ -281,7 +281,7 @@ export default {
       })
     },
     remove(node, data) {
-      var ids = [data.catId]
+      let ids = [data.catId]
       this.$confirm(`delete [${data.name}?]`, 'notification', {
         confirmButtonText: 'confirm',
         cancelButtonText: 'cancel',
@@ -291,7 +291,7 @@ export default {
           url: this.$http.adornUrl(`/product/category/delete`),
           method: 'post',
           data: this.$http.adornData(ids, false)
-        }).then(({data}) => {
+        }).then(() => {
           this.$message({
             message: 'success',
             type: 'success'

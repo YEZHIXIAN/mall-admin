@@ -26,7 +26,12 @@
       <el-input v-model="dataForm.enable" placeholder="启用状态[0 - 禁用，1 - 启用]"></el-input>
     </el-form-item>
     <el-form-item label="所属分类" prop="catelogId">
-      <el-input v-model="dataForm.catelogId" placeholder="所属分类"></el-input>
+<!--      <el-input v-model="dataForm.catelogId" placeholder="所属分类"></el-input>-->
+      <el-cascader
+        v-model="dataForm.catelogId"
+        :options="options"
+        @change="handleChange">
+      </el-cascader>
     </el-form-item>
     <el-form-item label="快速展示【是否展示在介绍上；0-否 1-是】，在sku中仍然可以调整" prop="showDesc">
       <el-input v-model="dataForm.showDesc" placeholder="快速展示【是否展示在介绍上；0-否 1-是】，在sku中仍然可以调整"></el-input>
