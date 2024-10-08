@@ -249,15 +249,15 @@ export default {
       })
         .then(({ data }) => {
           //请求成功
-          // console.log("要回显的数据", data);
-          this.category.name = data.data.name;
-          this.category.catId = data.data.catId;
-          this.category.icon = data.data.icon;
-          this.category.productUnit = data.data.productUnit;
-          this.category.parentCid = data.data.parentCid;
-          this.category.catLevel = data.data.catLevel;
-          this.category.sort = data.data.sort;
-          this.category.showStatus = data.data.showStatus;
+          console.log("要回显的数据", data);
+          this.category.name = data.category.name;
+          this.category.catId = data.category.catId;
+          this.category.icon = data.category.icon;
+          this.category.productUnit = data.category.productUnit;
+          this.category.parentCid = data.category.parentCid;
+          this.category.catLevel = data.category.catLevel;
+          this.category.sort = data.category.sort;
+          this.category.showStatus = data.category.showStatus;
         })
         .catch(() => {});
     },

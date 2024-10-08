@@ -174,7 +174,7 @@ export default {
         })
       })
         .then(({ data }) => {
-          this.cateRelationTableData = data.data;
+          this.cateRelationTableData = data.page;
         })
         .catch(() => {});
     },
