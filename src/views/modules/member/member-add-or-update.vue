@@ -3,7 +3,7 @@
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="120px">
     <el-form-item label="会员等级id" prop="levelId">
       <el-input v-model="dataForm.levelId" placeholder="会员等级id"></el-input>
     </el-form-item>
@@ -55,9 +55,6 @@
     <el-form-item label="注册时间" prop="createTime">
       <el-input v-model="dataForm.createTime" placeholder="注册时间"></el-input>
     </el-form-item>
-    <el-form-item label="社交账号id gitee" prop="giteeId">
-      <el-input v-model="dataForm.giteeId" placeholder="社交账号id gitee"></el-input>
-    </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -89,8 +86,7 @@
           integration: '',
           growth: '',
           status: '',
-          createTime: '',
-          giteeId: ''
+          createTime: ''
         },
         dataRule: {
           levelId: [
@@ -143,9 +139,6 @@
           ],
           createTime: [
             { required: true, message: '注册时间不能为空', trigger: 'blur' }
-          ],
-          giteeId: [
-            { required: true, message: '社交账号id gitee不能为空', trigger: 'blur' }
           ]
         }
       }
@@ -158,7 +151,7 @@
           this.$refs['dataForm'].resetFields()
           if (this.dataForm.id) {
             this.$http({
-              url: this.$http.adornUrl(`/user/member/info/${this.dataForm.id}`),
+              url: this.$http.adornUrl(`/member/member/info/${this.dataForm.id}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
@@ -180,7 +173,6 @@
                 this.dataForm.growth = data.member.growth
                 this.dataForm.status = data.member.status
                 this.dataForm.createTime = data.member.createTime
-                this.dataForm.giteeId = data.member.giteeId
               }
             })
           }
@@ -191,7 +183,7 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/user/member/${!this.dataForm.id ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/member/member/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
                 'id': this.dataForm.id || undefined,
@@ -211,8 +203,7 @@
                 'integration': this.dataForm.integration,
                 'growth': this.dataForm.growth,
                 'status': this.dataForm.status,
-                'createTime': this.dataForm.createTime,
-                'giteeId': this.dataForm.giteeId
+                'createTime': this.dataForm.createTime
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
