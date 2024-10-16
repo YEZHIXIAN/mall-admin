@@ -4,7 +4,7 @@
       <el-option
         v-for="item in brands"
         :key="item.brandId"
-        :label="item.brandName"
+        :label="item.name"
         :value="item.brandId"
       ></el-option>
     </el-select>
@@ -24,8 +24,13 @@ export default {
     //这里存放数据
     return {
       catId: 0,
-      brands: [],
-      brandId: '',
+      brands: [
+        {
+          brandId: 0,
+          name: ""
+        }
+      ],
+      brandId: "",
       subscribe: null
     }
   },
@@ -48,6 +53,7 @@ export default {
         })
       }).then(({data}) => {
         console.log('data', data.page)
+        this.brands = data.data;
       })
     }
   },

@@ -91,7 +91,7 @@ export default {
         name: file.name,
         url: res // The file URL returned by the backend
       })
-      this.emitInput(this.fileList[0].url) // Emit the file URL to parent component
+      this.emitInput(this.fileList) // Emit the file URL to parent component
     }
   }
 }

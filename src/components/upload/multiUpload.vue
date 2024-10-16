@@ -1,16 +1,16 @@
 <template>
   <div>
     <el-upload
-      :action="actionUrl"
+      :action="uploadUrl"
       :data="dataObj"
+      list-type="picture-card"
+      :multiple="true"
+      :show-file-list="true"
       :file-list="fileList"
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
       :on-success="handleUploadSuccess"
       :on-preview="handlePreview"
-      :limit="maxCount"
-      :on-exceed="handleExceed"
-      :show-file-list="showFile"
     >
       <i class="el-icon-plus"></i>
     </el-upload>
@@ -25,96 +25,71 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
-import axios from 'axios'
-
 export default {
   name: 'multiUpload',
   props: {
-    value: Array,
-    maxCount: {
-      type: Number,
-      default: 30
-    },
-    listType: {
-      type: String,
-      default: 'picture-card'
-    },
-    showFile: {
-      type: Boolean,
-      default: true
+    value: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
-      actionUrl: '',  // This will be dynamically set based on the pre-signed URL
+      uploadUrl: this.$http.adornUrl('/third-party/s3/upload'), // Backend URL for file upload
       filePathOrUrl: '',
       dataObj: {},
       dialogVisible: false,
-      dialogImageUrl: null
+      dialogImageUrl: null,
+      fileList: [] // Store the uploaded files here for preview
     }
   },
-  computed: {
-    fileList() {
-      let fileList = []
-      for (let i = 0; i < this.value.length; i++) {
-        fileList.push({ url: this.value[i] })
+  watch: {
+    value: {
+      immediate: true,
+      handler(newValue) {
+        // Sync the fileList with the value prop to ensure uploaded images are shown
+        this.fileList = newValue.map(url => ({
+          name: url.substring(url.lastIndexOf('/') + 1), // Extract file name from URL
+          url: url
+        }));
       }
-      return fileList
     }
   },
   methods: {
-    emitInput(fileList) {
-      let value = []
-      for (let i = 0; i < fileList.length; i++) {
-        value.push(fileList[i].url)
-      }
-      this.$emit('input', value)
+    emitInput(val) {
+      this.$emit('input', val);
     },
     handleRemove(file, fileList) {
-      this.emitInput(fileList)
+      // Remove the file from the list and emit the updated list
+      this.fileList = fileList;
+      const urls = this.fileList.map(file => file.url);
+      this.emitInput(urls);
     },
     handlePreview(file) {
-      this.dialogVisible = true
-      this.dialogImageUrl = file.url
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
-    async beforeUpload(file) {
-      let _self = this
-      return new Promise(async (resolve, reject) => {
-        try {
-          // Use adornUrl to send request to backend to fetch presigned URL
-          const {data} = await axios.get(this.$http.adornUrl('/third-party/s3/upload'), {
-            params: {
-              fileName: file.name
-            }
-          });
-
-          // Set pre-signed URL for uploading the file directly to S3
-          _self.actionUrl = data.url
-
-          resolve(true)  // Proceed with the upload
-        } catch (error) {
-          console.error('Error fetching pre-signed URL:', error)
-          reject(false)
+    beforeUpload(file) {
+      // If you need to process anything before upload, such as validating the file
+      return new Promise((resolve, reject) => {
+        if (file.size > 5 * 1024 * 1024) {
+          this.$message.error('File size exceeds 5MB');
+          reject(false);
+        } else {
+          resolve(true);
         }
-      })
+      });
     },
-    handleUploadSuccess(response, file) {
-      // Push the new file URL to the file list after upload is successful
+    handleUploadSuccess(res, file) {
+      // Assuming the response contains the file URL from the backend
       this.fileList.push({
         name: file.name,
-        url: this.actionUrl
-      })
-      this.emitInput(this.fileList)
-    },
-    handleExceed(files, fileList) {
-      this.$message({
-        message: `最多只能上传 ${this.maxCount} 个文件`,
-        type: 'warning',
-        duration: 1000
-      })
+        url: res // The file URL returned by the backend
+      });
+      const urls = this.fileList.map(file => file.url);
+      this.emitInput(urls); // Emit the full list of URLs to parent component
     }
   }
-}
+};
 </script>

@@ -1,4 +1,3 @@
-<!--
 <template>
   <div class="mod-config">
     <el-table
@@ -155,4 +154,3 @@ export default {
   }
 };
 </script>
--->
