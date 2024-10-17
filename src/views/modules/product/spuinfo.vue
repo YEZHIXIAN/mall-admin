@@ -104,11 +104,28 @@ export default {
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;
-      let param = {};
-      Object.assign(param, this.dataForm, {
+
+      // 创建一个参数对象，包含分页信息和用户输入的查询条件
+      let param = {
         page: this.pageIndex,
-        limit: this.pageSize
+        limit: this.pageSize,
+        key: this.dataForm.key, // 名称或ID查询条件
+        status: this.dataForm.status, // 上架状态查询条件
+        brandId: this.dataForm.brandId, // 品牌查询条件
+        catelogId: this.dataForm.catelogId, // 分类查询条件
+      };
+
+      // 移除未定义或空字符串的字段
+      Object.keys(param).forEach(key => {
+        if (param[key] === undefined || param[key] === '') {
+          delete param[key];
+        }
       });
+
+      console.log("param", param);
+      console.log("dataForm", this.dataForm)
+
+      // 发送带有查询条件的 HTTP 请求
       this.$http({
         url: this.$http.adornUrl("/product/spuinfo/list"),
         method: "get",
@@ -124,6 +141,7 @@ export default {
         this.dataListLoading = false;
       });
     },
+
     // 每页数
     sizeChangeHandle(val) {
       this.pageSize = val;

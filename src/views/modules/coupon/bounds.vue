@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('coupon:couponhistory:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('coupon:couponhistory:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('coupon:spubounds:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('coupon:spubounds:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -29,58 +29,29 @@
         label="id">
       </el-table-column>
       <el-table-column
-        prop="couponId"
+        prop="spuId"
         header-align="center"
         align="center"
-        label="优惠券id">
+        label="">
       </el-table-column>
       <el-table-column
-        prop="memberId"
+        prop="growBounds"
         header-align="center"
         align="center"
-        label="会员id">
+        label="成长积分">
       </el-table-column>
       <el-table-column
-        prop="memberNickName"
+        prop="buyBounds"
         header-align="center"
         align="center"
-        label="会员名字">
+        label="购物积分">
       </el-table-column>
       <el-table-column
-        prop="getType"
+        prop="work"
         header-align="center"
         align="center"
-        label="获取方式[0->后台赠送；1->主动领取]">
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        header-align="center"
-        align="center"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column
-        prop="useType"
-        header-align="center"
-        align="center"
-        label="使用状态[0->未使用；1->已使用；2->已过期]">
-      </el-table-column>
-      <el-table-column
-        prop="useTime"
-        header-align="center"
-        align="center"
-        label="使用时间">
-      </el-table-column>
-      <el-table-column
-        prop="orderId"
-        header-align="center"
-        align="center"
-        label="订单id">
-      </el-table-column>
-      <el-table-column
-        prop="orderSn"
-        header-align="center"
-        align="center"
-        label="订单号">
+        label="优惠生效情况">
+        <!-- [1111（四个状态位，从右到左）;0 - 无优惠，成长积分是否赠送;1 - 无优惠，购物积分是否赠送;2 - 有优惠，成长积分是否赠送;3 - 有优惠，购物积分是否赠送【状态位0：不赠送，1：赠送】] -->
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -109,7 +80,7 @@
 </template>
 
 <script>
-  import AddOrUpdate from './couponhistory-add-or-update'
+  import AddOrUpdate from './spubounds-add-or-update'
   export default {
     data () {
       return {
@@ -136,7 +107,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/coupon/couponhistory/list'),
+          url: this.$http.adornUrl('/coupon/spubounds/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -187,7 +158,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/coupon/couponhistory/delete'),
+            url: this.$http.adornUrl('/coupon/spubounds/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

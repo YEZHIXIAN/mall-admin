@@ -46,7 +46,7 @@ export default {
     };
   },
   watch:{
-    catelogPath(){
+    catelogPath(v){
       this.paths = this.catelogPath;
     },
     paths(v){
@@ -71,3 +71,5 @@ export default {
   }
 };
 </script>
+<style>
+</style>

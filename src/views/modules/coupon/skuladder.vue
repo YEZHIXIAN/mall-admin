@@ -56,7 +56,7 @@
         prop="addOther"
         header-align="center"
         align="center"
-        label="是否叠加其他优惠[0-不可叠加，1-可叠加]">
+        label="是否叠加优惠">
       </el-table-column>
       <el-table-column
         fixed="right"
