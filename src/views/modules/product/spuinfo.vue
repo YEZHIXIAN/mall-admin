@@ -30,7 +30,9 @@
             type="text"
             size="small"
             @click="productUp(scope.row.id)"
-          >上架</el-button>
+          >
+            上架
+          </el-button>
           <el-button type="text" size="small" @click="attrUpdateShow(scope.row)">规格</el-button>
         </template>
       </el-table-column>
@@ -61,7 +63,7 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       addOrUpdateVisible: false
-    };
+    }
   },
   props: {
     catId: {
@@ -71,39 +73,39 @@ export default {
   },
   components: {},
   activated() {
-    this.getDataList();
+    this.getDataList()
   },
   methods: {
     productUp(id) {
       this.$http({
-        url: this.$http.adornUrl("/product/spuinfo/" + id + "/up"),
-        method: "post"
-      }).then(({ data }) => {
+        url: this.$http.adornUrl('/product/spuinfo/' + id + '/up'),
+        method: 'post'
+      }).then(({data}) => {
         if (data && data.code === 0) {
           this.$message({
-            message: "操作成功",
-            type: "success",
+            message: '操作成功',
+            type: 'success',
             duration: 1500,
             onClose: () => {
-              this.getDataList();
+              this.getDataList()
             }
-          });
+          })
         } else {
-          this.$message.error(data.msg);
+          this.$message.error(data.msg)
         }
-      });
+      })
     },
     // 跳转到规格
     attrUpdateShow(row) {
       // console.log(row);
       this.$router.push({
-        path: "/product-attrupdate",
-        query: { spuId: row.id, catalogId: row.catalogId }
-      });
+        path: '/product-attrupdate',
+        query: {spuId: row.id, catalogId: row.catalogId}
+      })
     },
     // 获取数据列表
     getDataList() {
-      this.dataListLoading = true;
+      this.dataListLoading = true
 
       // 创建一个参数对象，包含分页信息和用户输入的查询条件
       let param = {
@@ -113,62 +115,63 @@ export default {
         status: this.dataForm.status, // 上架状态查询条件
         brandId: this.dataForm.brandId, // 品牌查询条件
         catelogId: this.dataForm.catelogId, // 分类查询条件
-      };
+      }
 
       // 移除未定义或空字符串的字段
       Object.keys(param).forEach(key => {
         if (param[key] === undefined || param[key] === '') {
-          delete param[key];
+          delete param[key]
         }
-      });
+      })
 
-      console.log("param", param);
-      console.log("dataForm", this.dataForm)
+      console.log('param', param)
+      console.log('dataForm', this.dataForm)
 
       // 发送带有查询条件的 HTTP 请求
       this.$http({
-        url: this.$http.adornUrl("/product/spuinfo/list"),
-        method: "get",
+        url: this.$http.adornUrl('/product/spuinfo/list'),
+        method: 'get',
         params: this.$http.adornParams(param)
-      }).then(({ data }) => {
+      }).then(({data}) => {
         if (data && data.code === 0) {
-          this.dataList = data.page.list;
-          this.totalPage = data.page.totalCount;
+          this.dataList = data.page.list
+          this.totalPage = data.page.totalCount
         } else {
-          this.dataList = [];
-          this.totalPage = 0;
+          this.dataList = []
+          this.totalPage = 0
         }
-        this.dataListLoading = false;
-      });
+        this.dataListLoading = false
+      })
     },
 
     // 每页数
     sizeChangeHandle(val) {
-      this.pageSize = val;
-      this.pageIndex = 1;
-      this.getDataList();
+      this.pageSize = val
+      this.pageIndex = 1
+      this.getDataList()
     },
     // 当前页
     currentChangeHandle(val) {
-      this.pageIndex = val;
-      this.getDataList();
+      this.pageIndex = val
+      this.getDataList()
     },
     // 多选
     selectionChangeHandle(val) {
-      this.dataListSelections = val;
+      this.dataListSelections = val
     },
     // 新增 / 修改
-    addOrUpdateHandle(id) {}
+    addOrUpdateHandle(id) {
+    }
   },
   mounted() {
-    this.dataSub = PubSub.subscribe("dataForm", (msg, val) => {
+    this.dataSub = PubSub.subscribe('dataForm', (msg, val) => {
       // console.log("查询条件", val);
-      this.dataForm = val;
-      this.getDataList();
-    });
+      this.dataForm = val
+      this.getDataList()
+    })
   },
   beforeDestroy() {
-    PubSub.unsubscribe(this.dataSub);
+    PubSub.unsubscribe(this.dataSub)
   }
-};
+}
 </script>
