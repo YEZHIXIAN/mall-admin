@@ -114,7 +114,7 @@ export default {
         key: this.dataForm.key, // 名称或ID查询条件
         status: this.dataForm.status, // 上架状态查询条件
         brandId: this.dataForm.brandId, // 品牌查询条件
-        catelogId: this.dataForm.catelogId, // 分类查询条件
+        catalogId: this.dataForm.catalogId, // 分类查询条件
       }
 
       // 移除未定义或空字符串的字段

@@ -42,7 +42,7 @@
               <img :src="scope.row.logo" style="width: 60px; height: 60px" />
             </template>
           </el-table-column>
-          <el-table-column prop="catelogId" header-align="center" align="center" label="分类id"></el-table-column>
+          <el-table-column prop="catalogId" header-align="center" align="center" label="分类id"></el-table-column>
           <el-table-column
             fixed="right"
             header-align="center"
